@@ -2,7 +2,7 @@ package Model;
 
 import Config.date;
 
-public class Admin {
+public class AdminModel {
     private String admin_id;
     private String adminName;
     private String email;
@@ -15,7 +15,7 @@ public class Admin {
     private String password;
     private String depName;
     
-	public Admin(int int1, String string, String string2) {
+	public AdminModel(int int1, String string, String string2) {
 		// TODO Auto-generated constructor stub
 	}
 	public String getAdmin_id() {
@@ -24,10 +24,10 @@ public class Admin {
 	public void setAdmin_id(String admin_id) {
 		this.admin_id = admin_id;
 	}
-	public String getAdminName() {
+	public String getAdmName() {
 		return adminName;
 	}
-	public void setAdminName(String adminName) {
+	public void setAdmName(String adminName) {
 		this.adminName = adminName;
 	}
 	public String getEmail() {

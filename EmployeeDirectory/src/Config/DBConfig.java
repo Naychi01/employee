@@ -5,15 +5,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
-//import Model.StaffModel;
-//import View.LogInView;
+import Model.AdminModel;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBConfig {
 	private final static String CONNECTION = "jdbc:mysql://localhost:3306/empdirectory";
@@ -145,5 +148,28 @@ public class DBConfig {
 		}
 		return total_count;
 	}
+	
+	public static List<Map<String, String>> getAdminData() throws SQLException {
+	    List<Map<String, String>> admins = new ArrayList<>();
+	    String query = "SELECT a.admName, d.depName " +
+	                   "FROM admin a " +
+	                   "JOIN department d ON a.dep_id = d.dep_id";
+	    
+	    try (Connection conn = getConnection();
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(query)) {
+	        
+	        while (rs.next()) {
+	            Map<String, String> admin = new HashMap<>();
+	            admin.put("name", rs.getString("admName"));
+	            admin.put("department", rs.getString("depName")); // Use depName now
+	            admins.add(admin);
+	        }
+	    }
+	    return admins;
+	}
+
+	
+	
 
 }
