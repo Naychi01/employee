@@ -1,0 +1,83 @@
+public void updateGridWithSearchResults(String searchQuery) {
+    // Clear the current grid content
+    gridpanel.removeAll();
+
+    try {
+        // Fetch filtered admin data from database using search query
+        List<Map<String, String>> admins = DBConfig.getAdminData(searchQuery);
+
+        if (admins.isEmpty()) {
+            JLabel noDataLabel = new JLabel("No results found for: " + searchQuery);
+            noDataLabel.setFont(new Font("Arial", Font.ITALIC, 16));
+            gridpanel.add(noDataLabel);
+        } else {
+            // Show only the first 5 results
+            int count = Math.min(admins.size(), 5);
+            for (int i = 0; i < count; i++) {
+                Map<String, String> admin = admins.get(i);
+
+                JPanel card = new JPanel(new BorderLayout());
+                card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+                card.setBackground(Color.WHITE);
+                card.setPreferredSize(new Dimension(680, 80));
+
+                // Info panel
+                JPanel infoPanel = new JPanel();
+                infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+                infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+                JLabel nameLabel = new JLabel(admin.get("name"));
+                nameLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+                JLabel deptLabel = new JLabel(admin.get("department"));
+                deptLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+                deptLabel.setForeground(Color.GRAY);
+
+                infoPanel.add(nameLabel);
+                infoPanel.add(deptLabel);
+                card.add(infoPanel, BorderLayout.CENTER);
+
+                // Delete button
+                JButton btndelete = new JButton("Delete");
+                btndelete.setBackground(Color.RED);
+                btndelete.setForeground(Color.WHITE);
+                btndelete.addActionListener(deleteEvent -> {
+                    // Remove the card from the gridpanel without deleting from database
+                    int confirm = JOptionPane.showConfirmDialog(
+                        card,
+                        "Delete " + admin.get("name") + "?",
+                        "Confirm Delete",
+                        JOptionPane.YES_NO_OPTION
+                    );
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        // Remove card from UI only (no database delete)
+                        gridpanel.remove(card);
+                        gridpanel.revalidate();
+                        gridpanel.repaint();
+                    }
+                });
+                card.add(btndelete, BorderLayout.EAST);
+
+                gridpanel.add(card);
+            }
+        }
+
+        // Add empty cards if fewer than 5 results
+        for (int i = admins.size(); i < 5; i++) {
+            JPanel emptyCard = new JPanel();
+            emptyCard.setBackground(new Color(245, 245, 245));
+            emptyCard.setPreferredSize(new Dimension(680, 80));
+            gridpanel.add(emptyCard);
+        }
+
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error loading admin data: " + ex.getMessage(),
+            "Database Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
+
+    // Refresh the grid after updating
+    gridpanel.revalidate();
+    gridpanel.repaint();
+}

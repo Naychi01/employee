@@ -1,0 +1,28 @@
+public static List<Map<String, String>> getAdminData(String searchQuery) throws SQLException {
+    List<Map<String, String>> admins = new ArrayList<>();
+    
+    // SQL query to filter by admin name or department
+    String query = "SELECT admName, Department FROM admin WHERE admName LIKE ? OR Department LIKE ?";
+    
+    try (Connection conn = getConnection(); 
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        // Prepare the search query with wildcards for partial matching
+        String searchPattern = "%" + searchQuery + "%";  // Wrapping search query with '%'
+
+        // Set the parameters for the prepared statement
+        stmt.setString(1, searchPattern);  // Search on admin name
+        stmt.setString(2, searchPattern);  // Search on department
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Map<String, String> admin = new HashMap<>();
+                admin.put("name", rs.getString("admName"));
+                admin.put("department", rs.getString("Department"));
+                admins.add(admin);
+            }
+        }
+    }
+    
+    return admins;
+}

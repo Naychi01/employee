@@ -1,0 +1,16 @@
+JButton btnSearch = new JButton("Search");
+btnSearch.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String searchQuery = JOptionPane.showInputDialog("Enter admin name or department to search:");
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            // Filter and update grid with search results
+            updateGridWithSearchResults(searchQuery);
+        }
+    }
+});
+btnSearch.setBackground(Color.RED);
+btnSearch.setForeground(Color.WHITE);
+btnSearch.setFont(new Font("Arial", Font.BOLD, 14));
+btnSearch.setBounds(551, 67, 91, 32);
+add(btnSearch);
